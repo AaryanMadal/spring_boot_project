@@ -1,0 +1,59 @@
+We need to have structured approach :
+1.First of the model is created name CloudVendor under the folder name 'model' and all the properties are added to it like the vendorname,etc.
+
+2.Now for the controller another class named CloudAPIService is created in another folder named 'controller'
+
+3.Add @RestController to the CloudVendorAPIService
+
+4.@RequestMapping("/cloudvendor") this is entered after the url to direct the request here
+
+5.Add @GetMapping where we use the function to get the details and also mention @GetMapping("{vendorId}") and use @PathVariable("vendorId") to use variables passed in the url which we will be passing in the url as an input to the function
+
+6.@PostMapping is used to create the components and use @RequestBody in the post function as to get the object which is passed as the input
+
+7.@PutMapping for updating the object
+
+8.@DeleteMapping for deleting the object
+
+9.For getting the input from the url use ("{}") this syntax and to get the input from the postman use @RequestBody
+
+10.Now we need to configure our project to connect to MySQL connector
+for that enter in resources and create a new file application.yaml and write these things in it:
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/cloud_vendor?useSSL=false
+    username: root
+    password: 123
+#JPA Settings
+
+  jpa.hibernate.ddl_auto: create / update
+
+* the url here have first jdbc and then MySQL(the database name) , then the ip of the localhost and then the port number 3306 which is default port number of the MySQL  and then the name of the schema created in the database and then saying whether using SSL or not?
+
+11.Now use @Entity in the vendor model so that the database understands that it is the model and add @Table(name="") to redefine the table name.Add @Id field to make understand the schema that this is the id field
+
+12.Use an interface for the repository layer and now extend the JpaRespository to it and add code 
+ => extends JpaRepository<modelCassName,data_type of Id field>{}
+
+13.Now define the service layer which will also be an interface and define all the methods which we want to be in service layer 
+
+14.Now  create a java class to implement those methods in service layer interface and now create an instance of CloudVendorRepository here and also add @Service to recognise it as service layer . Here all other logics are written in the functions
+
+
+----------------------------EXCEPTION Handling -------------------------------------------------
+We will be using @ControllerAdvice (for global exception handling) and @ExceptionHandler(Handles the custom exception and custom response)
+1. First create a custom exception class like CloudVendorNotFoundException extends RuntimeException class
+
+2.Create a CloudVendorException class for the exception object to be displayed
+
+3.Create a CloudVendorExceptionHandler which will handle all of the exceptions
+
+4.First of an exception is thrown in the service layer and then from there it goes to CloudVendorNotFoundException class from where the object created is sent to CloudVendorExceptionHandler which will create an object of CloudVendorException and then throw this object
+
+5.CloudVendorException class will have the message,throwable and the httpstatus all are private final and their constructor and the getter are created
+
+6.In CloudVendorExceptionHandler use @ControllerAdvice at top before the class and use @ExceptionHandler(value={ExceptionClass.class}) before the function to handle the exception.These function return ResponseEntity<Object> and for returning statement use ResponseEntity<>(CloudVenderException,HttpStatus.NOT_FOUND)
+
+
+
