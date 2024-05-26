@@ -41,7 +41,7 @@ spring:
 14.Now  create a java class to implement those methods in service layer interface and now create an instance of CloudVendorRepository here and also add @Service to recognise it as service layer . Here all other logics are written in the functions
 
 
-----------------------------EXCEPTION Handling -------------------------------------------------
+----------------------------Custom EXCEPTION Handling -------------------------------------------------
 We will be using @ControllerAdvice (for global exception handling) and @ExceptionHandler(Handles the custom exception and custom response)
 1. First create a custom exception class like CloudVendorNotFoundException extends RuntimeException class
 
@@ -55,5 +55,45 @@ We will be using @ControllerAdvice (for global exception handling) and @Exceptio
 
 6.In CloudVendorExceptionHandler use @ControllerAdvice at top before the class and use @ExceptionHandler(value={ExceptionClass.class}) before the function to handle the exception.These function return ResponseEntity<Object> and for returning statement use ResponseEntity<>(CloudVenderException,HttpStatus.NOT_FOUND)
 
+7.In CloundVendorNotFoundException just create two constructors one with message and the other with message & throwable.
+
+-----------------------------Custom Response Handling------------------------------------------
+1.Just create a ResponseHandler class and make a function in it responseBuilder which will return the ResponseEntity<Object>.Create a map in it and put message,HttpStatus and the object in it and return new ResponseEntity<>(response,HttpStatus).
+
+-----------------------------------------Unit Testing-----------------------------------------------
+
+First Repository layer testing, then service layer and at last the controller layer testing
+1. Repository layer testing: JUnit,AssertJ,Mockito and H2Database
+
+2.First of all find the dependencies for the above mentioned libraries in poml.xml file and add the dependencies if not present.
+	For H2database:
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+3. Now create a new directory of resources and add application.yaml to it and the content inside is:
+spring:
+  datasource:
+    url:jdbc: h2://men:db;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+
+  #The SQL dialect makes Hibernate generate better SQL for the chosen database
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    show-sql: true
+
+  #JPA settings
+  jpa.hibernate.ddl-auto: create-drop
+
+// The username and the password are predefined in this case
+
+4.
+
+		
 
 
